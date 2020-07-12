@@ -93,6 +93,7 @@ destas decisões. Não existe uma única maneira certa :wink:
 * [Criando sua CLI com
   Node.js](https://medium.com/henriquekuwai/criando-sua-cli-com-node-js-d6dee7d03110)
 
+[Site Quebrado](https://www.laboratoria.la/asdf)
 
 ### `README.md`
 

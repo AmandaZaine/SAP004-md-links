@@ -1,53 +1,71 @@
 /*
 module.exports = (path, options) => {
-  // ...
 };
+
+//const RegExQuePegaOsLinksEaDescricaoDoLink = /\[(\S.*)\]\((http[s]?:.*)\)/gm;
+//const RegExQuePegaOsLinksEaDescricaoDoLink = /\[([^\[]*)\]\((http[s]?:[A-Za-z0-9,-_#.]*)\)/gm;
 */
 
+const lerArquivoMD = require('./funcoes.js');
+
 const fs = require("fs")
-function mdLinks(path){
+let axios = require('axios');
 
-  fs.readFile(path, "utf8", (err, data) => {
-    if(err){
-      console.log(err)
-    }else{
-      const RegExQuePegaOsLinks = /\((http[s]?:.*)\)/gm;
-      //const RegExQuePegaOsLinksEaDescricaoDoLink = /\[(\S.*)\]\((http[s]?:.*)\)/gm;
-      //const RegExQuePegaOsLinksEaDescricaoDoLink = /\[([^\[]*)\]\((http[s]?:[A-Za-z0-9,-_#.]*)\)/gm;
-      const RegExQuePegaOsLinksEaDescricaoDoLink = /\[([^\[]*)\]\((http[s]?:[A-Za-z0-9,-_#.@%]*)\)/gm;
+function mdLinks(caminho, opcao){
+
+  return new Promise((resolve, reject) => {
+
+    lerArquivoMD(caminho).then((linksEmObjetos) => {
       
-      //Comparar o RegEx com o texto do arquivo
-      //Pegar os links
-      const arrayComTodosOsLinks = data.match(RegExQuePegaOsLinks)
-      const arrayComTodosOsLinksEDescricaoDeCadaLink = data.match(RegExQuePegaOsLinksEaDescricaoDoLink)
-      
-      //console.log(arrayComTodosOsLinksEDescricaoDeCadaLink)
+      function statusDoLink(arrayDeLinkEmObjetos){
+        return new Promise((resolve) => {
 
-      const arrayDeObjetosDosLinks = []
+          let buscaLink = (link) => axios.get(link.href).catch( 
+            (erro) => {
+              return { status: erro.response.status } 
+            } 
+          )
+          
+          let arrayDePromises = []; 
+          
+          arrayDeLinkEmObjetos.forEach((item) => {
+            arrayDePromises.push(buscaLink(item))
+          })
+            
+          return Promise.all(arrayDePromises).then((arrayFinal) => {
+          
+            arrayFinal.forEach((statusDoLink, indice) => {
+              if(statusDoLink.status == 200){
+                arrayDeLinkEmObjetos[indice]["Status"] = statusDoLink.statusText;
+                arrayDeLinkEmObjetos[indice]["StatusAxios"] = statusDoLink.status;
+              }else{
+                arrayDeLinkEmObjetos[indice]["Status"] = "Link Quebrado";
+                arrayDeLinkEmObjetos[indice]["StatusAxios"] = statusDoLink.status;
+              }
+            })
 
-      for(let descELink of arrayComTodosOsLinksEDescricaoDeCadaLink){
-        //console.log(descELink)  
-        
-        const quebrarTexto = descELink.split('](')
-        const descricaoDoLink = quebrarTexto[0].replace(/\[/, "")
-        const descricaoDoLink2 = quebrarTexto[0]
-        const linkLimpo = quebrarTexto[1].replace(/\)/g, "")
+            return resolve(arrayDeLinkEmObjetos);
 
-        //console.log(descricaoDoLink)
-        //console.log(typeof descricaoDoLink2)
-        //console.log(linkLimpo)
-        //\\r && \\n
-
-        let objectLink = { href: `${linkLimpo}`, text: `${descricaoDoLink}`, file: `${path}` }
-        
-        arrayDeObjetosDosLinks.push(objectLink)
-
+          }).catch((erro) => {
+              erro = "Erro"
+              console.log(erro)
+          })           
+        })
       }
 
-      //console.log(typeof arrayDeObjetosDosLinks[46])
-      console.log(arrayDeObjetosDosLinks)
-    }
-  }) 
+      statusDoLink(linksEmObjetos).then((resultado) => {
+        return resolve(resultado);
+    })
+
+    }).catch((erro) => {
+      erro = "Insira um arquivo .md para ser lido"
+      reject(erro)
+    })
+
+  })
+
 }
 
-mdLinks("README.md")
+//mdLinks("README.md")
+
+module.exports = mdLinks;
