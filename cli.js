@@ -4,9 +4,9 @@ const mdLinks = require("./index.js")
 
 const file = process.argv[2];
 
-const validate = process.argv.includes('--validate');
+//const validate = process.argv.includes('--validate');
 
-    mdLinks(file, {validate}).then((result)=>{
+    mdLinks(file, process.argv) .then((result)=>{
         
         console.log(result);
 
