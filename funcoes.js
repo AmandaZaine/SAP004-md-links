@@ -1,5 +1,3 @@
-
-
 const lerArquivoMD = (pathParametro) => {
     return new Promise((resolvido, rejeitado) => {
         const fs = require("fs")

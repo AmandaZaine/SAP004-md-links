@@ -128,14 +128,10 @@ function mdLinks(caminho, opcao){
         }
 
     }).catch((erro) => {
-      erro = "Insira um arquivo .md para ser lido"
+      erro = "INDEX.JS: Insira um arquivo .md para ser lido"
       reject(erro)
     })
-
   })
-
 }
-
-//mdLinks("README.md")
 
 module.exports = mdLinks;
