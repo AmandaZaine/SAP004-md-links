@@ -1,11 +1,3 @@
-/*
-module.exports = (path, options) => {
-};
-
-//const RegExQuePegaOsLinksEaDescricaoDoLink = /\[(\S.*)\]\((http[s]?:.*)\)/gm;
-//const RegExQuePegaOsLinksEaDescricaoDoLink = /\[([^\[]*)\]\((http[s]?:[A-Za-z0-9,-_#.]*)\)/gm;
-*/
-
 const lerArquivoMD = require('./funcoes.js');
 
 const fs = require("fs")

@@ -11,6 +11,6 @@ const file = process.argv[2];
         console.log(result);
 
     }).catch((erro) => {
-        erro = "Insira um arquivo para ser lido"
+        erro = "Insira um arquivo .md para ser lido"
         console.log(erro)
     });
