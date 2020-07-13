@@ -26,7 +26,7 @@ Através da opção --stats podemos ver estatísticas básicas sobre os links do
 ## 3. Documentação técnica
 
 * npm install AmandaZaine/SAP004-md-links
-* let mdLinks = require("mdLinks")
+* let mdLinks = require("md-links")
 
 ## 4. Exemplos
 
